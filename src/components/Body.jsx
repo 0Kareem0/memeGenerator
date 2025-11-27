@@ -1,10 +1,21 @@
-import { useState } from "react"
+import { useState , useEffect } from "react"
 export default function Body() {
     const [meme , setMeme] = useState({
         topText: "",
         bottomText: "",
         imgUrl: "http://i.imgflip.com/1bij.jpg"
     })
+    const [randomMeme, setRandomMeme] = useState(null)
+    console.log("Rendered!")
+
+    useEffect(() =>{
+        fetch("https://api.imgflip.com/get_memes")
+        .then(response => response.json())
+        .then(data => setRandomMeme(data.data.memes));
+    }, [])
+
+    
+
     function handleChange(event) {
       const {value , name} = event.currentTarget
       setMeme(prevMeme =>{
@@ -12,10 +23,18 @@ export default function Body() {
           ...prevMeme,
             [name]: value
         }
-        
       })
       console.log(name);
    }
+   
+   function getRandomMeme() {
+    const randomIndex = Math.floor(Math.random() * randomMeme.length);
+    setMeme(prevMeme =>({
+        ...prevMeme,
+        imgUrl: randomMeme[randomIndex].url
+    }))
+}
+   
     return (
         <main>
             <div className="form">
@@ -38,7 +57,7 @@ export default function Body() {
                         value={meme.bottomText}
                     />
                 </label>
-                <button>Get a new meme image 🖼</button>
+                <button onClick={getRandomMeme}>Get a new meme image 🖼</button>
             </div>
             <div className="meme">
                 <img src={meme.imgUrl} />
@@ -47,7 +66,8 @@ export default function Body() {
             </div>
             <div className="downloadForm">
                 <button className="downloadButton">Download meme 🖼</button>
-            </div>
+            </div>    
+            {/* <pre>{JSON.stringify(people , null , 2)}</pre> */}
         </main>
     )
 }
