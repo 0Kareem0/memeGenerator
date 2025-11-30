@@ -14,6 +14,7 @@ export default function Body() {
         .then(data => setRandomMeme(data.data.memes));
     }, [])
 
+ 
     
 
     function handleChange(event) {
@@ -26,6 +27,8 @@ export default function Body() {
       })
       console.log(name);
    }
+
+   
    
    function getRandomMeme() {
     const randomIndex = Math.floor(Math.random() * randomMeme.length);
